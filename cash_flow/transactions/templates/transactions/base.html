@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Cash Flow</title>
+</head>
+<body>
+    <nav>
+    <a href="{% url 'home' %}">Главная</a> |
+    <a href="{% url 'transaction_list' %}">Транзакции</a> |
+    <a href="{% url 'reference_list' %}">Справочники</a>
+    </nav>
+    <hr>
+    {% block content %}{% endblock %}
+</body>
+</html>

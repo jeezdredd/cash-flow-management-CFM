@@ -1,0 +1,60 @@
+{% extends "transactions/base.html" %}
+{% block content %}
+<h2>Управление справочниками</h2>
+
+<h3>Статусы</h3>
+<a href="{% url 'status_create' %}">Добавить статус</a>
+<ul>
+{% for status in statuses %}
+    <li>
+        {{ status.name }}
+        <a href="{% url 'status_edit' status.id %}">Изменить</a> |
+        <a href="{% url 'status_delete' status.id %}">Удалить</a>
+    </li>
+{% empty %}
+    <li>Нет статусов</li>
+{% endfor %}
+</ul>
+
+<h3>Типы</h3>
+<a href="{% url 'type_create' %}">Добавить тип</a>
+<ul>
+{% for type in types %}
+    <li>
+        {{ type.name }}
+        <a href="{% url 'type_edit' type.id %}">Изменить</a> |
+        <a href="{% url 'type_delete' type.id %}">Удалить</a>
+    </li>
+{% empty %}
+    <li>Нет типов</li>
+{% endfor %}
+</ul>
+
+<h3>Категории</h3>
+<a href="{% url 'category_create' %}">Добавить категорию</a>
+<ul>
+{% for category in categories %}
+    <li>
+        {{ category.name }} ({{ category.type.name }})
+        <a href="{% url 'category_edit' category.id %}">Изменить</a> |
+        <a href="{% url 'category_delete' category.id %}">Удалить</a>
+    </li>
+{% empty %}
+    <li>Нет категорий</li>
+{% endfor %}
+</ul>
+
+<h3>Подкатегории</h3>
+<a href="{% url 'subcategory_create' %}">Добавить подкатегорию</a>
+<ul>
+{% for subcategory in subcategories %}
+    <li>
+        {{ subcategory.name }} ({{ subcategory.category.name }})
+        <a href="{% url 'subcategory_edit' subcategory.id %}">Изменить</a> |
+        <a href="{% url 'subcategory_delete' subcategory.id %}">Удалить</a>
+    </li>
+{% empty %}
+    <li>Нет подкатегорий</li>
+{% endfor %}
+</ul>
+{% endblock %}

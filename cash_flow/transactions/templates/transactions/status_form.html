@@ -1,0 +1,10 @@
+{% extends "transactions/base.html" %}
+{% block content %}
+<h2>{% if is_edit %}Редактировать{% else %}Добавить{% endif %} статус</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Сохранить</button>
+    <a href="{% url 'reference_list' %}">Отмена</a>
+</form>
+{% endblock %}

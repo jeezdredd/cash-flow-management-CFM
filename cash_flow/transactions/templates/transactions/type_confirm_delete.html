@@ -1,0 +1,10 @@
+{% extends "transactions/base.html" %}
+{% block content %}
+<h2>Удаление типа</h2>
+<p>Вы уверены, что хотите удалить тип "{{ type.name }}"?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Да, удалить</button>
+    <a href="{% url 'reference_list' %}">Отмена</a>
+</form>
+{% endblock %}
