@@ -1,13 +1,31 @@
 from django import forms
+from django.core.exceptions import ValidationError
 from .models import Transaction, Status, Type, Category, SubCategory
 
 class TransactionForm(forms.ModelForm):
     class Meta:
         model = Transaction
-        fields = ['date', 'status', 'type', 'category', 'subcategory', 'amount', 'comment']
+        fields = ['created_at', 'date', 'status', 'type', 'category', 'subcategory', 'amount', 'comment']
         widgets = {
+            'created_at': forms.DateInput(attrs={'type': 'date'}),
             'date': forms.DateInput(attrs={'type': 'date'}),
         }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        type = cleaned_data.get('type')
+        category = cleaned_data.get('category')
+        subcategory = cleaned_data.get('subcategory')
+        amount = cleaned_data.get('amount')
+
+        if not type or not category or not subcategory or amount is None:
+            raise ValidationError("Поля 'сумма', 'тип', 'категория' и 'подкатегория' обязательны.")
+
+        if category.type != type:
+            raise ValidationError("Категория не относится к выбранному типу.")
+
+        if subcategory.category != category:
+            raise ValidationError("Подкатегория не связана с выбранной категорией.")
 
 class TransactionFilterForm(forms.Form):
     date_from = forms.DateField(

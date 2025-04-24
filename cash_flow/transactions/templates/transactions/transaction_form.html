@@ -1,9 +1,71 @@
 {% extends "transactions/base.html" %}
 {% block content %}
-<h2>Добавить транзакцию</h2>
+<h2>{% if is_edit %}Редактировать{% else %}Добавить{% endif %} транзакцию</h2>
 <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    <p>{{ form.created_at.label_tag }} {{ form.created_at }}</p>
+    <p>{{ form.date.label_tag }} {{ form.date }}</p>
+    <p>{{ form.status.label_tag }} {{ form.status }}</p>
+    <p>{{ form.type.label_tag }} {{ form.type }}</p>
+    <p>
+        {{ form.category.label_tag }}
+        <select name="{{ form.category.html_name }}" id="{{ form.category.id_for_label }}">
+            {% for option in form.category.field.queryset %}
+                <option value="{{ option.pk }}" data-type="{{ option.type_id }}"
+                    {% if form.category.value|stringformat:"s" == option.pk|stringformat:"s" %}selected{% endif %}>
+                    {{ option }}
+                </option>
+            {% endfor %}
+        </select>
+    </p>
+    <p>
+        {{ form.subcategory.label_tag }}
+        <select name="{{ form.subcategory.html_name }}" id="{{ form.subcategory.id_for_label }}">
+            {% for option in form.subcategory.field.queryset %}
+                <option value="{{ option.pk }}" data-category="{{ option.category_id }}"
+                    {% if form.subcategory.value|stringformat:"s" == option.pk|stringformat:"s" %}selected{% endif %}>
+                    {{ option }}
+                </option>
+            {% endfor %}
+        </select>
+    </p>
+    <p>{{ form.amount.label_tag }} {{ form.amount }}</p>
+    <p>{{ form.comment.label_tag }} {{ form.comment }}</p>
     <button type="submit">Сохранить</button>
 </form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const typeSelect = document.getElementById('id_type');
+    const categorySelect = document.getElementById('id_category');
+    const subcategorySelect = document.getElementById('id_subcategory');
+
+    function filterCategories() {
+        const typeId = typeSelect.value;
+        for (let option of categorySelect.options) {
+            option.style.display = (!typeId || option.dataset.type == typeId) ? '' : 'none';
+        }
+        if (categorySelect.value && categorySelect.selectedOptions[0].style.display === 'none') {
+            categorySelect.value = '';
+        }
+        filterSubcategories();
+    }
+
+    function filterSubcategories() {
+        const categoryId = categorySelect.value;
+        for (let option of subcategorySelect.options) {
+            option.style.display = (!categoryId || option.dataset.category == categoryId) ? '' : 'none';
+        }
+        if (subcategorySelect.value && subcategorySelect.selectedOptions[0].style.display === 'none') {
+            subcategorySelect.value = '';
+        }
+    }
+
+    if (typeSelect && categorySelect && subcategorySelect) {
+        typeSelect.addEventListener('change', filterCategories);
+        categorySelect.addEventListener('change', filterSubcategories);
+        filterCategories();
+    }
+});
+</script>
 {% endblock %}

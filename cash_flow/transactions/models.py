@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 # Create your models here.
 class Status(models.Model):
@@ -30,12 +31,12 @@ class SubCategory(models.Model):
 
     class Meta:
         verbose_name_plural = "Subcategories"
-        
+
     def __str__(self):
         return f"{self.name} ({self.category.name})"
 
 class Transaction(models.Model):
-    created_at = models.DateField(auto_now_add=True)
+    created_at = models.DateField(default=timezone.now)
     date = models.DateField()
     status = models.ForeignKey(Status, on_delete=models.PROTECT)
     type = models.ForeignKey(Type, on_delete=models.PROTECT)
