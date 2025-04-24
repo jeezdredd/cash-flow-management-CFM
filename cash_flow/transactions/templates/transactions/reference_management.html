@@ -3,7 +3,7 @@
 <h2>Управление справочниками</h2>
 
 <h3>Статусы</h3>
-<a href="{% url 'status_create' %}">Добавить статус</a>
+<a href="{% url 'status_create' %}" class="add-link">Добавить статус</a>
 <ul>
 {% for status in statuses %}
     <li>
@@ -17,7 +17,7 @@
 </ul>
 
 <h3>Типы</h3>
-<a href="{% url 'type_create' %}">Добавить тип</a>
+<a href="{% url 'type_create' %}" class="add-link">Добавить тип</a>
 <ul>
 {% for type in types %}
     <li>
@@ -31,7 +31,7 @@
 </ul>
 
 <h3>Категории</h3>
-<a href="{% url 'category_create' %}">Добавить категорию</a>
+<a href="{% url 'category_create' %}" class="add-link">Добавить категорию</a>
 <ul>
 {% for category in categories %}
     <li>
@@ -45,7 +45,7 @@
 </ul>
 
 <h3>Подкатегории</h3>
-<a href="{% url 'subcategory_create' %}">Добавить подкатегорию</a>
+<a href="{% url 'subcategory_create' %}" class="add-link">Добавить подкатегорию</a>
 <ul>
 {% for subcategory in subcategories %}
     <li>

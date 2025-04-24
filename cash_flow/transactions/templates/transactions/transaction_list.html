@@ -1,9 +1,8 @@
 {% extends "transactions/base.html" %}
 {% block content %}
-<h2>Список транзакций</h2>
 
 <div class="filter-form">
-    <h3>Фильтры</h3>
+    <h3 class="centered-title">Фильтры</h3>
     <form method="get">
         <div class="form-row">
             {{ filter_form.as_p }}
@@ -13,7 +12,21 @@
     </form>
 </div>
 
-<a href="{% url 'transaction_create' %}">Добавить транзакцию</a>
+<div class="transaction-list-header">
+    <h2>Список транзакций</h2>
+    <a href="{% url 'transaction_create' %}" class="add-transaction-btn">Добавить транзакцию</a>
+</div>
+
+<div class="summary-block">
+    <strong>Итого:</strong>
+    <ul>
+        <li>Количество: {{ count }}</li>
+        <li>Доход: {{ income_sum }} &#8381;</li>
+        <li>Расход: {{ expense_sum }} &#8381;</li>
+        <li>Сальдо: {{ profit }} &#8381;</li>
+    </ul>
+</div>
+
 <table>
     <tr>
         <th>Дата</th>

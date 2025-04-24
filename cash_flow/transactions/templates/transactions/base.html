@@ -1,8 +1,10 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <title>Cash Flow</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
     <nav>
@@ -12,5 +14,17 @@
     </nav>
     <hr>
     {% block content %}{% endblock %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const flash = document.querySelector('.flash-message');
+    if (flash) {
+        setTimeout(() => {
+            flash.style.transition = 'opacity 0.7s';
+            flash.style.opacity = '0';
+            setTimeout(() => flash.remove(), 700);
+        }, 2500);
+    }
+});
+</script>
 </body>
 </html>

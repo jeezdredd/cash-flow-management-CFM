@@ -1,6 +1,7 @@
 from .forms import TransactionForm, TransactionFilterForm, StatusForm, TypeForm, CategoryForm, SubCategoryForm
 from django.shortcuts import redirect, render, get_object_or_404
 from .models import Transaction, Status, Type, Category, SubCategory
+from django.db.models import Sum
 
 
 def transaction_create(request):
@@ -32,31 +33,47 @@ def transaction_delete(request, transaction_id):
     return render(request, 'transactions/transaction_confirm_delete.html', {'transaction': transaction})
 
 def transaction_list(request):
-    transactions = Transaction.objects.all().order_by('-date')
+    all_transactions = Transaction.objects.all()
+    transactions = all_transactions.order_by('-date')
 
     filter_form = TransactionFilterForm(request.GET)
     if filter_form.is_valid():
         if filter_form.cleaned_data['date_from']:
             transactions = transactions.filter(date__gte=filter_form.cleaned_data['date_from'])
-
         if filter_form.cleaned_data['date_to']:
             transactions = transactions.filter(date__lte=filter_form.cleaned_data['date_to'])
-
         if filter_form.cleaned_data['status']:
             transactions = transactions.filter(status=filter_form.cleaned_data['status'])
-
         if filter_form.cleaned_data['type']:
             transactions = transactions.filter(type=filter_form.cleaned_data['type'])
-
         if filter_form.cleaned_data['category']:
             transactions = transactions.filter(category=filter_form.cleaned_data['category'])
-
         if filter_form.cleaned_data['subcategory']:
             transactions = transactions.filter(subcategory=filter_form.cleaned_data['subcategory'])
 
+    income_type = Type.objects.filter(name__iexact="Доход").first()
+    expense_type = Type.objects.filter(name__iexact="Расход").first()
+
+    if income_type:
+        income_sum = all_transactions.filter(type=income_type).aggregate(total=Sum('amount'))['total'] or 0
+    else:
+        income_sum = 0
+
+    if expense_type:
+        expense_sum = all_transactions.filter(type=expense_type).aggregate(total=Sum('amount'))['total'] or 0
+    else:
+        expense_sum = 0
+
+    profit = income_sum - expense_sum
+    count = transactions.count()
+
     return render(request, 'transactions/transaction_list.html', {
         'transactions': transactions,
-        'filter_form': filter_form
+        'filter_form': filter_form,
+        'income_sum': income_sum,
+        'expense_sum': expense_sum,
+        'profit': profit,
+        'count': count,
     })
 
 
