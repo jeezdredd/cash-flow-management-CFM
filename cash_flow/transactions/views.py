@@ -3,7 +3,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from .models import Transaction, Status, Type, Category, SubCategory
 from django.db.models import Sum
 
-
+# Основная модель транзакции
 def transaction_create(request):
     if request.method == 'POST':
         form = TransactionForm(request.POST)
@@ -14,6 +14,7 @@ def transaction_create(request):
         form = TransactionForm()
     return render(request, 'transactions/transaction_form.html', {'form': form})
 
+# Редактирование существующей транзакции
 def transaction_edit(request, transaction_id):
     transaction = get_object_or_404(Transaction, id=transaction_id)
     if request.method == 'POST':
@@ -25,6 +26,7 @@ def transaction_edit(request, transaction_id):
         form = TransactionForm(instance=transaction)
     return render(request, 'transactions/transaction_form.html', {'form': form, 'is_edit': True})
 
+# Удаление транзакции
 def transaction_delete(request, transaction_id):
     transaction = get_object_or_404(Transaction, id=transaction_id)
     if request.method == 'POST':
@@ -32,12 +34,14 @@ def transaction_delete(request, transaction_id):
         return redirect('transaction_list')
     return render(request, 'transactions/transaction_confirm_delete.html', {'transaction': transaction})
 
+# Список транзакций с фильтрацией и расчетом итогов
 def transaction_list(request):
     all_transactions = Transaction.objects.all()
     transactions = all_transactions.order_by('-date')
 
     filter_form = TransactionFilterForm(request.GET)
     if filter_form.is_valid():
+        # Применение фильтров по дате, статусу, типу, категории и подкатегории
         if filter_form.cleaned_data['date_from']:
             transactions = transactions.filter(date__gte=filter_form.cleaned_data['date_from'])
         if filter_form.cleaned_data['date_to']:
@@ -51,6 +55,7 @@ def transaction_list(request):
         if filter_form.cleaned_data['subcategory']:
             transactions = transactions.filter(subcategory=filter_form.cleaned_data['subcategory'])
 
+    # Расчет итоговых сумм по доходам и расходам
     income_type = Type.objects.filter(name__iexact="Доход").first()
     expense_type = Type.objects.filter(name__iexact="Расход").first()
 
@@ -76,7 +81,7 @@ def transaction_list(request):
         'count': count,
     })
 
-
+# Управление справочниками (статусы, типы, категории, подкатегории)
 def reference_list(request):
     statuses = Status.objects.all()
     types = Type.objects.all()
@@ -90,6 +95,8 @@ def reference_list(request):
         'subcategories': subcategories,
     })
 
+# CRUD-операции для справочников (статусы, типы, категории, подкатегории)
+# Ниже — аналогичные функции для создания, редактирования и удаления справочных сущностей
 def status_create(request):
     if request.method == 'POST':
         form = StatusForm(request.POST)
@@ -202,5 +209,6 @@ def subcategory_delete(request, subcategory_id):
         return redirect('reference_list')
     return render(request, 'transactions/subcategory_confirm_delete.html', {'subcategory': subcategory})
 
+# Главная страница
 def home(request):
     return render(request, 'transactions/home.html')

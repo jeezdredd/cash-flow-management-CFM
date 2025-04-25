@@ -2,6 +2,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from .models import Transaction, Status, Type, Category, SubCategory
 
+# Главная страница
 class TransactionForm(forms.ModelForm):
     class Meta:
         model = Transaction
@@ -11,6 +12,7 @@ class TransactionForm(forms.ModelForm):
             'date': forms.DateInput(attrs={'type': 'date'}),
         }
 
+    # Валидация связей между типом, категорией и подкатегорией
     def clean(self):
         cleaned_data = super().clean()
         type = cleaned_data.get('type')
@@ -27,6 +29,7 @@ class TransactionForm(forms.ModelForm):
         if subcategory.category != category:
             raise ValidationError("Подкатегория не связана с выбранной категорией.")
 
+# Форма для фильтрации транзакций по различным параметрам
 class TransactionFilterForm(forms.Form):
     date_from = forms.DateField(
         required=False,
@@ -59,6 +62,7 @@ class TransactionFilterForm(forms.Form):
         label='Подкатегория'
     )
 
+# Формы для CRUD-операций со справочниками
 class StatusForm(forms.ModelForm):
     class Meta:
         model = Status

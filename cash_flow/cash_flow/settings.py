@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'rest_framework',
     'transactions',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -119,6 +120,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+# STATICFILES_DIRS — список дополнительных директорий для поиска статических файлов
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
@@ -126,4 +128,5 @@ STATICFILES_DIRS = [
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
+# DEFAULT_AUTO_FIELD — тип поля по умолчанию для автоинкрементных ключей
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

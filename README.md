@@ -5,15 +5,12 @@
 ```bash
 # Создание виртуального окружения
 python -m venv venv
-
 # Активация виртуального окружения
-# Для Windows:
-venv\Scripts\activate
-# Для Linux/Mac:
-# source venv/bin/activate
+venv\Scripts\activate  # Windows
+# source venv/bin/activate  # Linux/Mac
 
-# Установка Django
-pip install django
+# Установка зависимостей
+pip install -r requirements.txt
 ```
 
 ## 2. Настройка базы данных
